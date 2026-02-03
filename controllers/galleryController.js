@@ -31,3 +31,46 @@ exports.getGalleryByCategory = async (req, res) => {
 
   res.json(galleries);
 };
+
+exports.updateGallery = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description, image, category } = req.body;
+        const updatedData = {};
+        if (title) updatedData.title = title;
+        if (description) updatedData.description = description;
+        if (image) updatedData.image = image;
+        if (category) updatedData.category = category;
+        const updatedGallery = await Gallery.findByIdAndUpdate(id, updatedData, { new: true
+        });
+        if (!updatedGallery) {
+            return res.status(404).json({ message: 'Gallery not found' });
+        }
+        res.status(200).json(updatedGallery);
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error });
+    }
+};
+
+exports.deleteGallery = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedGallery = await Gallery.findByIdAndDelete(id);
+        if (!deletedGallery) {
+            return res.status(404).json({ message: 'Gallery not found' });
+        }
+        res.status(200).json({ message: 'Gallery deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error });
+    }
+};
+
+exports.deleteAllGalleries = async (req, res) => {
+    try {
+        await Gallery.deleteMany({});
+        res.status(200).json({ message: 'All galleries deleted successfully' });
+    }   
+    catch (error) {
+        res.status(500).json({ message: 'Server Error', error });
+    }
+};

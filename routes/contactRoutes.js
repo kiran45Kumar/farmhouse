@@ -5,6 +5,7 @@ const adminAuth = require('../middleware/adminAuth');
 router.post('/', contactController.submitContact);
 router.get('/', adminAuth, contactController.getContacts);
 router.delete('/:id', adminAuth, contactController.deleteContact);
+router.put('/:id', adminAuth, contactController.updateContact);
 router.delete('/', adminAuth, contactController.deleteAllContacts);
 
 module.exports = router;
