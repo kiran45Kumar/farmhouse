@@ -60,3 +60,12 @@ exports.deleteTestimonial = async (req, res) => {
 
 };
 };
+exports.deleteAllTestimonials = async (req, res) => {
+    try {
+        await Testimonial.deleteMany({});
+        res.status(200).json({ message: 'All testimonials deleted successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ message: 'Server Error', error });
+    }
+};
