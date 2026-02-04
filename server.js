@@ -19,6 +19,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 app.use('/api/contacts', contactRoutes);
 app.use('/api/gallery', galleryRoutes);
 app.use('/api/testimonials', testimonialRoutes);

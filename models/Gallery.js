@@ -22,4 +22,19 @@ const GallerySchema = new Schema({
     }
 }, {timestamps: true});
 
+GallerySchema.virtual("createdAtIST").get(function () {
+  return this.createdAt.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
+});
+
+GallerySchema.virtual("updatedAtIST").get(function () {
+  return this.updatedAt.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
+});
+
+GallerySchema.set("toJSON", { virtuals: true });
+GallerySchema.set("toObject", { virtuals: true });
+
 module.exports = mongoose.model('Gallery', GallerySchema);

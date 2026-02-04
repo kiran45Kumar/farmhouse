@@ -1,76 +1,83 @@
-const Gallery = require('../models/Gallery');
-
+const galleryService = require('../service/galleryService')
 exports.addGallery = async (req, res) => {
     try {
-        const { title, description, image, category } = req.body;
-        if (!title || !image) {
-            return res.status(400).json({ message: 'Title and Image are required' });
-        }
-        const newGallery = new Gallery({ title, description, image, category });
-        const savedGallery = await newGallery.save();
-        res.status(201).json(savedGallery);
+        const gallery = await galleryService.addGallery({
+            title: req.body.title,
+            categoryId: req.body.categoryId,
+            description: req.body.description,
+            image: req.file
+        });
+
+        res.status(201).json(gallery);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error });
+        res.status(400).json({ message: error.message });
     }
 };
 
 exports.getGalleries = async (req, res) => {
     try {
-        const galleries = await Gallery.find().sort({ createdAt: -1 });
+        const galleries = await galleryService.getGalleries();
         res.status(200).json(galleries);
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error });
+        res.status(400).json({ message: error.message });
     }
 };
 
 exports.getGalleryByCategory = async (req, res) => {
-  const { categoryId } = req.params;
-
-  const galleries = await Gallery.find({ category: categoryId })
-    .populate("category", "name");
-
-  res.json(galleries);
+    try {
+        const { categoryId } = req.params;
+        const galleries = await galleryService.getGalleryByCategory(categoryId);
+        res.status(200).json(galleries);
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
 };
 
 exports.updateGallery = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { title, description, image, category } = req.body;
-        const updatedData = {};
-        if (title) updatedData.title = title;
-        if (description) updatedData.description = description;
-        if (image) updatedData.image = image;
-        if (category) updatedData.category = category;
-        const updatedGallery = await Gallery.findByIdAndUpdate(id, updatedData, { new: true
-        });
-        if (!updatedGallery) {
-            return res.status(404).json({ message: 'Gallery not found' });
-        }
-        res.status(200).json(updatedGallery);
-    } catch (error) {
-        res.status(500).json({ message: 'Server Error', error });
+  try {
+    const { id } = req.params;
+    const { title, description, categoryId } = req.body;
+    const image = req.file;
+
+    const updatedGallery = await galleryService.updateGallery(
+      id,
+      title,
+      description,
+      image,
+      categoryId
+    );
+
+    if (!updatedGallery) {
+      throw new Error("Gallery not found");
     }
+
+    res.status(200).json(updatedGallery);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: error.message });
+  }
 };
 
 exports.deleteGallery = async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedGallery = await Gallery.findByIdAndDelete(id);
+        const deletedGallery = await galleryService.deleteGallery(id);
         if (!deletedGallery) {
-            return res.status(404).json({ message: 'Gallery not found' });
+            throw new Error('Gallery not found');
         }
-        res.status(200).json({ message: 'Gallery deleted successfully' });
+        res.status(204).json({message: "Gallery deleted successfully"});
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error });
+        res.status(400).json({ message: error.message });
     }
 };
 
 exports.deleteAllGalleries = async (req, res) => {
     try {
-        await Gallery.deleteMany({});
-        res.status(200).json({ message: 'All galleries deleted successfully' });
-    }   
+        await galleryService.deleteAllGalleries();
+        res.status(204).json({message: "All galleries deleted successfully"});
+    }
     catch (error) {
-        res.status(500).json({ message: 'Server Error', error });
+        res.status(400).json({ message: error.message });
     }
 };
