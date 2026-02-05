@@ -1,13 +1,22 @@
 const galleryService = require('../service/galleryService')
+const cloudinary = require('../config/cloudinaryConfig')
 exports.addGallery = async (req, res) => {
     try {
+        const result = await cloudinary.uploader.upload(
+      `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
+      {
+        folder: "gallery",
+      }
+    );
+        // console.log("Cloudinary key:", process.env.CLOUDINARY_API_KEY);
         const gallery = await galleryService.addGallery({
             title: req.body.title,
             categoryId: req.body.categoryId,
             description: req.body.description,
-            image: req.file
+            image: req.file,
+            result,
         });
-
+ 
         res.status(201).json(gallery);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -16,6 +25,7 @@ exports.addGallery = async (req, res) => {
 
 exports.getGalleries = async (req, res) => {
     try {
+        console.log("Cloudinary key:", process.env.CLOUDINARY_API_KEY);
         const galleries = await galleryService.getGalleries();
         res.status(200).json(galleries);
     } catch (error) {

@@ -11,10 +11,17 @@ const GallerySchema = new Schema({
         type: String,
         trim: true
     },
-    image:{
-        type: String,
-        required: true
+   
+  image: {
+    url: {
+      type: String,
+      required: true,
     },
+    publicId: {
+      type: String,
+      required: true,
+    },
+  },
     category: {
         type: Schema.Types.ObjectId,
         ref: 'Category',

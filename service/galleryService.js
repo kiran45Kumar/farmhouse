@@ -2,7 +2,9 @@ const Gallery = require('../models/Gallery');
 const Category = require('../models/Category');
 const path = require('path');
 const fs = require('fs');
-exports.addGallery = async ({title, description, image, categoryId}) => {
+const cloudinary = require('../config/cloudinaryConfig')
+exports.addGallery = async ({title, description, image, categoryId, result}) => {
+    // console.log("Cloudinary key:", process.env.CLOUDINARY_API_KEY);
     try {
         if (!title) {
             throw new Error('Title is required');
@@ -17,7 +19,17 @@ exports.addGallery = async ({title, description, image, categoryId}) => {
         if (!category) {
             throw new Error("Invalid category");
         }
-        const newGallery = new Gallery({ title, description, image: `/uploads/gallery/${image.filename}`, category: category._id });
+        
+        const newGallery = new Gallery({ 
+            title, 
+            description, 
+            image: {
+                url: result.secure_url,
+                publicId: result.public_id,
+            },
+            imagePublicId:image.publicId,
+            category: category._id 
+        });
         const savedGallery = await newGallery.save();
         return savedGallery
     } catch (error) {
