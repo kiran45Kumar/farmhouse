@@ -87,11 +87,11 @@ exports.updateGallery = async ( id, title, description, image, categoryId ) => {
 
 exports.deleteGallery = async (id) => {
     try {
-        const deletedGallery = await Gallery.findByIdAndDelete(id);
+        const deletedGallery = await Gallery.findByIdAndUpdate(id, { isDeleted:true, deletedAt: new Date() }, { new: true });
         if (!deletedGallery) {
             throw new Error('Gallery not found');
         }
-        return deletedGallery;
+        return {Deleted: deletedGallery.isDeleted, deletedAt: deletedGallery.deletedAt};
     } catch (error) {
         throw new Error('Server error: ' + error.message);
     }

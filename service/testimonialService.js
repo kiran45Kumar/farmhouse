@@ -45,7 +45,7 @@ exports.updateTestimonial = async (id, name, message, rating) => {
 
 exports.deleteTestimonial = async (id) => {
     try {
-        const deletedTestimonial = await Testimonial.findByIdAndDelete(id);
+        const deletedTestimonial = await Testimonial.findByIdAndUpdate(id, {isDeleted:true, deletedAt: new Date()}, {new: true});
         if (!deletedTestimonial) {
             throw new Error("Testimonial not found");
         }

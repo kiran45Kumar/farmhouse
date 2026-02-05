@@ -24,6 +24,7 @@ exports.submitContact = async (name, email, message, phone, location) => {
         else if (!location) {
             throw new Error('Location is required');
         }
+
         const newContact = new Contact({ name, email, message, phone, location });
         const savedContact = await newContact.save();
         return savedContact;
@@ -44,7 +45,7 @@ exports.getContacts = async () => {
 
 exports.deleteContact = async (id) => {
     try {
-        const deletedContact = await Contact.findByIdAndDelete(id);
+        const deletedContact = await Contact.findByIdAndUpdate(id, { isDeleted:true, deletedAt: new Date() }, {new: true});
         if (!deletedContact) {
             return { message: 'Contact not found' };
         }

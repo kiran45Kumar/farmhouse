@@ -26,7 +26,7 @@ exports.getCategories = async () => {
 
 exports.getCategoryById = async (id) => {
     try {
-        const category = await Category.findById(id)
+        const category = await Category.findById(id);
         return category;
     }
     catch (error) {
@@ -52,7 +52,7 @@ exports.updateCategory = async (id, name, description) => {
 
 exports.deleteCategory = async (id) => {
     try {
-        const deletedCategory = await Category.findByIdAndDelete(id);
+        const deletedCategory = await Category.findByIdAndUpdate(id, {isDeleted:true, deletedAt: new Date()}, {new: true});
         if (!deletedCategory) {
             throw new Error('Category not found');
         }

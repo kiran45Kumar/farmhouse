@@ -24,7 +24,26 @@ const ContactSchema = new Schema({
     location: {
         type: String,
         trim: true
+    },
+    isDeleted: {
+        type: Boolean,
+        default:false
+    },
+    deletedAt: {
+        type: Date,
+        default: null,
     }
 }, {timestamps: true});
 
+ContactSchema.virtual("createdAtIST").get(function () {
+  return this.createdAt.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
+});
+
+ContactSchema.virtual("updatedAtIST").get(function () {
+  return this.updatedAt.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
+});
 module.exports = mongoose.model('Contact', ContactSchema);

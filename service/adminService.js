@@ -26,15 +26,14 @@ exports.loginAdmin = async (email, password) => {
         if (!email || !password) {
             throw new Error('Email and Password are required');
         }
-        const admin = await Admin.findOne({ email });
-        if (!admin) {
-            throw new Error('Invalid Credentials');
+        if(email !== process.env.ADMIN_EMAIL){
+            throw new Error('Invalid credentials');
         }
-        const isMatch = await bcrypt.compare(password, admin.password);
+        const isMatch = await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH);
         if (!isMatch) {
             throw new Error('Invalid Credentials');
         }   
-        const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign({ role: "admin", email: process.env.ADMIN_EMAIL}, process.env.JWT_SECRET, { expiresIn: '7d' });
         return token;
     } catch (error) {
         throw new Error('Server Error: ' + error.message);
@@ -61,7 +60,7 @@ exports.updateAdmin = async (id, email, password) => {
 
 exports.deleteAdmin = async (_id) => {
     try {
-        const deletedAdmin = await Admin.findByIdAndDelete(_id);
+        const deletedAdmin = await Admin.findByIdAndUpdate(_id, {isDeleted:true, deletedAt: new Date()}, {new: true});;
         if (!deletedAdmin) {
             throw new Error('Admin not found');
         }

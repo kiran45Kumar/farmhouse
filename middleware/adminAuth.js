@@ -6,16 +6,16 @@ module.exports = async (req, res, next) => {
     if (!token) {
         return res.status(401).json({ message: 'No token, authorization denied' });
     }
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const admin = await Admin.findById(decoded.id); 
-        if (!admin) {
-            return res.status(401).json({ message: 'Authorization denied' });
-        }
-        req.admin = admin;
-        next();
+     try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
     }
-    catch (error) {
-        res.status(401).json({ message: 'Token is not valid' });
-    }
+
+    req.admin = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Token is not valid" });
+  }
 };

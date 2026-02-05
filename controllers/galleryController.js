@@ -66,7 +66,7 @@ exports.deleteGallery = async (req, res) => {
         if (!deletedGallery) {
             throw new Error('Gallery not found');
         }
-        res.status(204).json({message: "Gallery deleted successfully"});
+        res.status(204).json({message: "Gallery deleted successfully`"});
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
