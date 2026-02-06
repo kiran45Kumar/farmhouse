@@ -2,6 +2,7 @@ const Gallery = require('../models/Gallery');
 const Category = require('../models/Category');
 const path = require('path');
 const fs = require('fs');
+const uploadFromBuffer = require("../utils/cloudinaryUpload");
 const cloudinary = require('../config/cloudinaryConfig')
 exports.addGallery = async ({title, description, image, categoryId, result}) => {
     // console.log("Cloudinary key:", process.env.CLOUDINARY_API_KEY);
@@ -65,7 +66,6 @@ exports.updateGallery = async ( id, title, description, image, categoryId ) => {
     if (!gallery) {
       throw new Error("Gallery not found");
     }
-
     if (categoryId) {
       const category = await Category.findById(categoryId);
       if (!category) {
@@ -73,25 +73,19 @@ exports.updateGallery = async ( id, title, description, image, categoryId ) => {
       }
       gallery.category = category._id;
     }
-
     if (title) gallery.title = title;
     if (description) gallery.description = description;
-
-    if (image) {
-      const oldImagePath = path.join(
-        __dirname,
-        "..",
-        gallery.image
-      );
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath);
+    if (image && image.buffer) {
+      if (gallery.image?.publicId) {
+        await cloudinary.uploader.destroy(gallery.image.publicId);
       }
-
-      gallery.image = `/uploads/gallery/${image.filename}`;
+      const result = await uploadFromBuffer(image.buffer);
+      gallery.image = {
+        url: result.secure_url,
+        publicId: result.public_id,
+      };
     }
-
     return await gallery.save();
-
   } catch (error) {
     throw new Error(error.message);
   }
