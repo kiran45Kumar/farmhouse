@@ -8,7 +8,6 @@ exports.addGallery = async (req, res) => {
         folder: "gallery",
       }
     );
-        // console.log("Cloudinary key:", process.env.CLOUDINARY_API_KEY);
         const gallery = await galleryService.addGallery({
             title: req.body.title,
             categoryId: req.body.categoryId,
