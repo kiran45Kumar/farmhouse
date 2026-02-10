@@ -2,13 +2,16 @@ const Testimonial = require('../models/Testimonials');
 exports.addTestimonial = async (name, message, rating) => {
     try {
         if (!name ) {
-            throw new Error('Name is required' );
+            throw new Error('Name is required.');
         }
         else if (!message) {
-            throw new Error('Message is required' );
+            throw new Error('Message is required.');
         }
         else if (!rating) {
-            throw new Error('Rating is required' );
+            throw new Error('Rating is required.');
+        }
+        else if(rating > 5){
+            throw new Error('Rating should be below 5.');
         }
         const newTestimonial = new Testimonial({ name, message, rating });
         const savedTestimonial = await newTestimonial.save();

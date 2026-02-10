@@ -23,19 +23,19 @@ const CategorySchema = new Schema({
 
 }, {timestamps: true});
 
-// CategorySchema.virtual("createdAtIST").get(function () {
-//   return this.createdAt.toLocaleString("en-IN", {
-//     timeZone: "Asia/Kolkata",
-//   });
-// });
+CategorySchema.virtual("createdAtIST").get(function () {
+  return this.createdAt.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
+});
 
 
-// CategorySchema.virtual("updatedAtIST").get(function () {
-//   return this.updatedAt.toLocaleString("en-IN", {
-//     timeZone: "Asia/Kolkata",
-//   });
-// });
+CategorySchema.virtual("updatedAtIST").get(function () {
+  return this.updatedAt.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+  });
+});
 
-// CategorySchema.set("toJSON", { virtuals: true });
-// CategorySchema.set("toObject", { virtuals: true });
+CategorySchema.set("toJSON", { virtuals: true });
+CategorySchema.set("toObject", { virtuals: true });
 module.exports = mongoose.model('Category', CategorySchema);

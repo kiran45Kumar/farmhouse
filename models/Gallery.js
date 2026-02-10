@@ -1,41 +1,44 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const GallerySchema = new Schema({
+const GallerySchema = new Schema(
+  {
     title: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
     description: {
+      type: String,
+      trim: true,
+    },
+
+    image: {
+      url: {
         type: String,
-        trim: true
+        required: true,
+      },
+      publicId: {
+        type: String,
+        required: true,
+      },
     },
-   
-  image: {
-    url: {
-      type: String,
-      required: true,
-    },
-    publicId: {
-      type: String,
-      required: true,
-    },
-  },
     category: {
-        type: Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
     },
     isDeleted: {
-      type:Boolean,
+      type: Boolean,
       default: false,
     },
     deletedAt: {
       type: Date,
       default: null,
-    }
-}, {timestamps: true});
+    },
+  },
+  { timestamps: true },
+);
 
 GallerySchema.virtual("createdAtIST").get(function () {
   return this.createdAt.toLocaleString("en-IN", {
@@ -58,4 +61,4 @@ GallerySchema.virtual("updatedAtIST").get(function () {
 GallerySchema.set("toJSON", { virtuals: true });
 GallerySchema.set("toObject", { virtuals: true });
 
-module.exports = mongoose.model('Gallery', GallerySchema);
+module.exports = mongoose.model("Gallery", GallerySchema);

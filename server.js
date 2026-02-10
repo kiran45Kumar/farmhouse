@@ -10,7 +10,7 @@ require('dotenv').config();
 connectDB();
 
 const corsOptions = {
-    origin: 'http://localhost:4200',
+    origin: 'http://localhost:5173',
     optionsSuccessStatus: 200 
 };
 const app = express();

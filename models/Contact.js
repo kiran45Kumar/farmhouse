@@ -46,4 +46,7 @@ ContactSchema.virtual("updatedAtIST").get(function () {
     timeZone: "Asia/Kolkata",
   });
 });
+
+ContactSchema.set("toJSON", { virtuals: true });
+ContactSchema.set("toObject", { virtuals: true });
 module.exports = mongoose.model('Contact', ContactSchema);

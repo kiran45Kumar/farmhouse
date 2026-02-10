@@ -30,6 +30,7 @@ exports.submitContact = async (name, email, message, phone, location) => {
         return savedContact;
     }
     catch (error) {
+        console.log(error)
         throw error;
     }
 };
